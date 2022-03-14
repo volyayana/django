@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from django.forms.models import model_to_dict
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
 
 from phones.models import Phone
 
@@ -18,7 +19,10 @@ def show_catalog(request):
 
 
 def show_product(request, slug):
-    template = 'product.html'
-    phone = Phone.objects.get(slug=slug)
-    context = {'phone': phone}
-    return render(request, template, context)
+    try:
+        template = 'product.html'
+        phone = Phone.objects.get(slug=slug)
+        context = {'phone': phone}
+        return render(request, template, context)
+    except ObjectDoesNotExist:
+        raise Http404

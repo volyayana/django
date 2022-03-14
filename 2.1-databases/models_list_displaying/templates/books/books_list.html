@@ -16,10 +16,10 @@
                 </div>
             {% endfor %}
         </div>
-        {% if page and previous_date %}
+        {% if previous_date %}
             <a class="button button-primary" href="/{{ previous_date }}">< {{ previous_date }}&nbsp;</a>
         {% endif %}
-        {% if page and next_date %}
+        {% if next_date %}
             <a class="button button-primary" href="/{{ next_date }}">&nbsp;{{ next_date }} ></a>
         {% endif %}
     </div>
