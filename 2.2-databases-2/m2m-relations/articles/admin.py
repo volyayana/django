@@ -7,13 +7,13 @@ from django.core.exceptions import ValidationError
 
 class ArticleTagInlineFormset(BaseInlineFormSet):
     def clean(self):
-        main_tag = 0
+        main_tag = False
         for form in self.forms:
             print(form.cleaned_data)
             if form.cleaned_data.get('is_main'):
-                if main_tag > 0:
+                if main_tag:
                     raise ValidationError('Основным может быть только 1 раздел')
-                main_tag += 1
+                main_tag = form.cleaned_data.get('is_main')
 
         return super().clean()  # вызываем базовый код переопределяемого метода
 
@@ -33,3 +33,4 @@ class ArticleAdmin(admin.ModelAdmin):
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_details = ['id', 'name']
+    inlines = [ArticleTagInline]
