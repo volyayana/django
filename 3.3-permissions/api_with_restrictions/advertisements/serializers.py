@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
-from advertisements.models import Advertisement
+from advertisements.models import Advertisement, AdvertisementStatusChoices, AdvertisementFavourite
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -40,6 +41,36 @@ class AdvertisementSerializer(serializers.ModelSerializer):
     def validate(self, data):
         """Метод для валидации. Вызывается при создании и обновлении."""
 
-        # TODO: добавьте требуемую валидацию
+        if data.get('status', AdvertisementStatusChoices.OPEN) == AdvertisementStatusChoices.OPEN:
+            adv_count = Advertisement.objects.filter(creator=self.context['request'].user,
+                                                     status=AdvertisementStatusChoices.OPEN).count()
+            if adv_count == 10 and self.context['request'].stream.method == 'POST':
+                raise ValidationError('Пользователь может иметь не более 10 открытых объявлений')
+        return data
 
+
+class AdvertisementFavouriteSerializer(serializers.ModelSerializer):
+    """Serializer для избранных объявлений."""
+
+    user = UserSerializer(
+        read_only=True,
+    )
+
+    class Meta:
+        model = AdvertisementFavourite
+        fields = ('id', 'advertisement', 'user')
+
+    def create(self, validated_data):
+        """Метод для создания"""
+
+        # Простановка значения поля создатель по-умолчанию.
+        # Текущий пользователь является тем, кто добавляет объявления в избранное,
+        # изменить или переопределить его через API нельзя.
+        validated_data["user"] = self.context["request"].user
+        return super().create(validated_data)
+
+    def validate(self, data):
+        """Метод для валидации. Вызывается при создании и обновлении."""
+        if data.get('advertisement').creator == self.context["request"].user:
+            raise ValidationError('Пользователь не может добавлять в избранное свои объявления')
         return data
