@@ -80,9 +80,9 @@ WSGI_APPLICATION = 'stocks_products.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'netol_db',
-        'HOST': 'sqlite3'
+        'HOST': 'localhost',
     }
 }
 
