@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-nw^y+m^wmxza1asgk+)!ua2qx9)g+#v=6%76-9i8i(6eqiw94j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [0.0.0.0]
 
 
 # Application definition
@@ -82,10 +82,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'netol_db',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-        'USER': 'netol',
-        'PASSWORD': '1111',
+        'HOST': 'sqlite3'
     }
 }
 

@@ -40,20 +40,18 @@ Content-Type: application/json
 
 Для запуска проекта необходимо:
 
-Установить зависимости:
+Скачать Dockerfile
+Выполнить из директории, в которой расположен Dockerfile, команду
 
 ```bash
-pip install -r requirements.txt
+docker build .
 ```
-
-Вам необходимо будет создать базу в postgres и прогнать миграции:
-
-```base
-manage.py migrate
-```
+В результате будет получена строка вида:
+Successfully built ff5819b52547
+ff5819b52547 - id контейнера, необходимо заменить значение в следующей команде.
 
 Выполнить команду:
-
 ```bash
-python manage.py runserver
+docker run -d -p 8000:8000 ff5819b52547
 ```
+
